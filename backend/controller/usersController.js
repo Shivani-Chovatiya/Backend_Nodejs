@@ -19,7 +19,7 @@ const registerUser = asyncHandler(async (req, res) => {
     city,
     state,
   } = req.body;
-  // console.log(req.body);
+  console.log(req.body);
   // console.log(check);
   const userExist = await User.findOne({ email });
   if (userExist) {
@@ -62,7 +62,9 @@ const registerUser = asyncHandler(async (req, res) => {
 });
 
 const authController = asyncHandler(async (req, res) => {
+  console.log(req.body);
   const { email, password } = req.body;
+
   const user = await User.findOne({ email });
 
   if (user && (await user.matchPassword(password))) {
@@ -88,7 +90,7 @@ const authController = asyncHandler(async (req, res) => {
 const getUserProfile = asyncHandler(async (req, res) => {
   // res.send("success");
   const { userId } = req.body;
-
+  // const userId = req.params.id;
   console.log(userId);
   const user = await User.findById(userId);
   // console.log(user.check);
@@ -168,6 +170,45 @@ const deleteuser = asyncHandler(async (req, res) => {
   }
 });
 
+const deleteuser1 = asyncHandler(async (req, res) => {
+  const userid = req.params.id;
+  console.log(req.params);
+  try {
+    await User.findOneAndDelete({ _id: userid });
+
+    res.status(200).send("User Deleted");
+  } catch (error) {
+    res.status(404).json({ message: error.stack });
+  }
+});
+
+const getUserProfile1 = asyncHandler(async (req, res) => {
+  // res.send("success");
+  // const { userId } = req.body;
+  const userId = req.params.id;
+  // console.log("vbn");
+  // console.log(req.params, 25);
+  const user = await User.findById(userId);
+  // console.log(user.check);
+  if (user) {
+    res.json({
+      _id: user._id,
+      image: user.image,
+      name: user.name,
+      email: user.email,
+      password: user.password,
+      mobile_no: user.mobile_no,
+      gender: user.gender,
+      check: user.check,
+      city: user.city,
+      state: user.state,
+    });
+  } else {
+    res.status(404);
+    throw new Error("User Not Found");
+  }
+});
+
 module.exports = {
   authController,
   getUserProfile,
@@ -175,5 +216,7 @@ module.exports = {
   updateUserProfile,
   getallUsers,
   deleteuser,
+  deleteuser1,
+  getUserProfile1,
   //   forgotPassword,
 };
