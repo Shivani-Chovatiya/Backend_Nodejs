@@ -36,8 +36,10 @@ app.use(errorHandler);
 const PORT = 8080;
 app.listen(
   // process.env.PORT ||
-  PORT,
+  process.env.PORT,
   () => {
-    console.log(`Server Running in development Mode on port ${PORT}`.inverse);
+    console.log(
+      `Server Running in development Mode on port ${process.env.PORT}`.inverse
+    );
   }
 );
